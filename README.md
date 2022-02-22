@@ -1,4 +1,4 @@
-# labstreaminglayer-node
+# lsl.js
 This library is owned by urish [node-lsl](https://github.com/urish/node-lsl).
 
 I have adapted it so that it can be used with the current version of Node (v16.14) and with machines with M1 chip.
