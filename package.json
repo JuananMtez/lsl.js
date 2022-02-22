@@ -1,6 +1,6 @@
 {
   "name": "lsl.js",
-  "version": "1.0.4",
+  "version": "1.0.5",
   "description": "Node interface to the lab streaming layer",
   "repository": "https://github.com/JuananMtez/lsl.js",
   "type": "module",
@@ -13,6 +13,6 @@
     "ffi-napi": "^4.0.3",
     "ref-array-napi": "^1.2.2"
   },
-  "author": "Juan Antonio",
-  "license": "ISC"
+  "author": "Uri Shaked",
+  "license": "MIT"
 }
