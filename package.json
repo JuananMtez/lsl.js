@@ -2,6 +2,7 @@
   "name": "lsl.js",
   "version": "1.0.3",
   "description": "Node interface to the lab streaming layer",
+  "repository": "https://github.com/JuananMtez/lsl.js",
   "type": "module",
   "main": "index.js",
   "scripts": {
