@@ -1,0 +1,17 @@
+{
+  "name": "lsl.js",
+  "version": "1.0.3",
+  "description": "Node interface to the lab streaming layer",
+  "type": "module",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "dependencies": {
+    "ref-napi": "^3.0.3",
+    "ffi-napi": "^4.0.3",
+    "ref-array-napi": "^1.2.2"
+  },
+  "author": "Juan Antonio",
+  "license": "ISC"
+}
