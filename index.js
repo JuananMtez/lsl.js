@@ -144,19 +144,26 @@ class StreamInlet extends EventEmitter {
         const sampleBuffer = new FloatArray(maxSamples * this.channelCount);
         const timestampBuffer = new DoubleArray(maxSamples);
         const samples = lsl.lsl_pull_chunk_f(
-            this.inlet,
-            sampleBuffer,
-            timestampBuffer,
-            sampleBuffer.length,
-            timestampBuffer.length,
-            timeout,
-            0,
-        );
-        return { samples: sampleBuffer.toJSON(), timestamps: timestampBuffer.toJSON() };
+                this.inlet,
+                sampleBuffer,
+                timestampBuffer,
+                sampleBuffer.length,
+                timestampBuffer.length,
+                timeout,
+                0,
+            );
+        
+        return (
+            {
+                samples,
+                data: this._parseSampleBuffer(sampleBuffer.toJSON(), samples),
+                timestamps: timestampBuffer.toJSON().slice(0, samples / this.channelCount)
+            }
+				);
     }
 
     // Note: interval is derived from samplingRate and chunk size
-    streamChunks(chunkSize, timeout = 0.0, maxSamples = chunkSize * 1.5, errCode = 0) {
+    streamChunksNotCapture(chunkSize, timeout = 0.0, maxSamples = chunkSize * 1.5, errCode = 0) {
         const timerInterval = (1000 / this.samplingRate) * chunkSize;
         const sampleBuffer = new FloatArray(maxSamples * this.channelCount);
         const timestampBuffer = new DoubleArray(maxSamples);
@@ -173,10 +180,13 @@ class StreamInlet extends EventEmitter {
                         timeout,
                         errCode,
                     );
-                    this.emit('chunk', {
+                    this.emit('chunk', 
+											{
                         data: this._parseSampleBuffer(sampleBuffer.toJSON(), samples),
                         timestamps: timestampBuffer.toJSON().slice(0, samples / this.channelCount),
-                    });
+                    	}
+											
+										);
                 }
             });
         };
