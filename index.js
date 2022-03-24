@@ -67,7 +67,7 @@ const lsl = ffi.Library(path.join(__dirname, 'prebuilt', libName), {
     lsl_pull_chunk_f: ['ulong', [inletType, FloatArray, DoubleArray, 'ulong', 'ulong', 'double', 'int']],
 });
 
-const resolve_byprop = (prop, value, min = 1, timeout = 10) => {
+const resolve_byprop = (prop, value, min = 1, timeout = 1) => {
     const buf = Buffer.alloc(1024);
     const numStreams = lsl.lsl_resolve_byprop(buf, 1024, prop, value, min, timeout);
     const streams = [];
@@ -156,12 +156,14 @@ class StreamInlet extends EventEmitter {
         return (
             {
                 samples,
+                dataOriginal: this._parseSamplesLSL(sampleBuffer.toJSON(), samples),
                 data: this._parseSampleBuffer(sampleBuffer.toJSON(), samples),
                 timestamps: timestampBuffer.toJSON().slice(0, samples / this.channelCount)
             }
-				);
+		);
     }
 
+    
     // Note: interval is derived from samplingRate and chunk size
     streamChunksNotCapture(chunkSize, timeout = 0.0, maxSamples = chunkSize * 1.5, errCode = 0) {
         const timerInterval = (1000 / this.samplingRate) * chunkSize;
@@ -181,9 +183,9 @@ class StreamInlet extends EventEmitter {
                         errCode,
                     );
                     this.emit('chunk', 
-											{
+						{
                         data: this._parseSampleBuffer(sampleBuffer.toJSON(), samples),
-                        timestamps: timestampBuffer.toJSON().slice(0, samples / this.channelCount),
+                        timestamps: timestampBuffer.toJSON(),
                     	}
 											
 										);
@@ -221,12 +223,32 @@ class StreamInlet extends EventEmitter {
         }
         return parsedArray;
     }
+
+    _parseSamplesLSL(sampleArray, samples) {
+
+        let cont = 0
+        let list = []
+        let sample = []      
+        for (let i = 0; i < samples; i++) {
+            sample.push(sampleArray[i])
+            cont++
+            if (cont == this.channelCount) {
+                list.push(sample)
+                cont = 0
+                sample = []
+
+            }
+
+        }
+        return list
+    }
 }
 
 module.exports = {
     channel_format_t,
     error_code_t,
     FloatArray,
+    ArrayBuffer,
     DoubleArray,
     protocol_version: lsl.lsl_protocol_version,
     library_version: lsl.lsl_library_version,
