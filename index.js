@@ -3,6 +3,7 @@ const ffi = require('ffi-napi');
 const ref = require('ref-napi');
 const ArrayType = require('ref-array-napi');
 const EventEmitter = require('events');
+const { time } = require('console');
 
 const streamInfo = ref.refType(ref.types.void);
 const xmlPtr = ref.refType(ref.types.void);
@@ -65,6 +66,7 @@ const lsl = ffi.Library(path.join(__dirname, 'prebuilt', libName), {
     lsl_resolve_byprop: ['int', [buffer, 'int', 'string', 'string', 'int', 'double']],
     lsl_create_inlet: [inletType, [streamInfo, 'int', 'int', 'int']],
     lsl_pull_chunk_f: ['ulong', [inletType, FloatArray, DoubleArray, 'ulong', 'ulong', 'double', 'int']],
+    lsl_time_correction: ['double', [inletType, 'double', 'int']]
 });
 
 const resolve_byprop = (prop, value, min = 1, timeout = 1) => {
@@ -140,6 +142,9 @@ class StreamInlet extends EventEmitter {
         this.samplingRate = info.getNominalSamplingRate();
     }
 
+    timeCorrection(timeout = 32000000.0, ec = 0) {
+        return lsl.lsl_time_correction(this.inlet, timeout, 0)
+    }
     pullChunk(timeout = 0.0, maxSamples = 1024) {
         const sampleBuffer = new FloatArray(maxSamples * this.channelCount);
         const timestampBuffer = new DoubleArray(maxSamples);
@@ -266,6 +271,7 @@ module.exports = {
     resolve_byprop,
     create_inlet: lsl.lsl_create_inlet,
     pull_chunk_f: lsl.lsl_pull_chunk_f,
+    time_correction: lsl.lsl_time_correction,
     StreamInlet,
     StreamInfo,
 };
