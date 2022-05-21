@@ -143,7 +143,7 @@ class StreamInlet extends EventEmitter {
     }
 
     timeCorrection(timeout = 32000000.0, ec = 0) {
-        return lsl.lsl_time_correction(this.inlet, timeout, 0)
+        return lsl.lsl_time_correction(this.inlet, timeout, ec)
     }
     pullChunk(timeout = 0.0, maxSamples = 1024) {
         const sampleBuffer = new FloatArray(maxSamples * this.channelCount);
@@ -193,7 +193,7 @@ class StreamInlet extends EventEmitter {
                         timestamps: timestampBuffer.toJSON(),
                     	}
 											
-										);
+					);
                 }
             });
         };
