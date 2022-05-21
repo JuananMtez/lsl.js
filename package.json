@@ -1,6 +1,6 @@
 {
   "name": "lsl.js",
-  "version": "1.0.6",
+  "version": "1.0.8",
   "description": "Node interface to the lab streaming layer",
   "repository": "https://github.com/JuananMtez/lsl.js",
   "main": "index.js",
@@ -8,9 +8,11 @@
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "dependencies": {
-    "ref-napi": "^3.0.3",
+    "buffer": "^6.0.3",
     "ffi-napi": "^4.0.3",
-    "ref-array-napi": "^1.2.2"
+    "form-data": "^4.0.0",
+    "ref-array-napi": "^1.2.2",
+    "ref-napi": "^3.0.3"
   },
   "author": "Uri Shaked",
   "license": "MIT"
