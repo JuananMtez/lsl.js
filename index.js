@@ -3,7 +3,6 @@ const ffi = require('ffi-napi');
 const ref = require('ref-napi');
 const ArrayType = require('ref-array-napi');
 const EventEmitter = require('events');
-const { time } = require('console');
 
 const streamInfo = ref.refType(ref.types.void);
 const xmlPtr = ref.refType(ref.types.void);
@@ -160,17 +159,15 @@ class StreamInlet extends EventEmitter {
         
         return (
             {
-                samples,
-                dataOriginal: this._parseSamplesLSL(sampleBuffer.toJSON(), samples),
                 data: this._parseSampleBuffer(sampleBuffer.toJSON(), samples),
-                timestamps: timestampBuffer.toJSON().slice(0, samples / this.channelCount)
+                timestamps: timestampBuffer.toJSON()
             }
 		);
     }
 
     
     // Note: interval is derived from samplingRate and chunk size
-    streamChunksNotCapture(chunkSize, timeout = 0.0, maxSamples = chunkSize * 1.5, errCode = 0) {
+    streamChunks(chunkSize, timeout = 0.0, maxSamples = chunkSize * 1.5, errCode = 0) {
         const timerInterval = (1000 / this.samplingRate) * chunkSize;
         const sampleBuffer = new FloatArray(maxSamples * this.channelCount);
         const timestampBuffer = new DoubleArray(maxSamples);
@@ -229,24 +226,7 @@ class StreamInlet extends EventEmitter {
         return parsedArray;
     }
 
-    _parseSamplesLSL(sampleArray, samples) {
 
-        let cont = 0
-        let list = []
-        let sample = []      
-        for (let i = 0; i < samples; i++) {
-            sample.push(sampleArray[i])
-            cont++
-            if (cont == this.channelCount) {
-                list.push(sample)
-                cont = 0
-                sample = []
-
-            }
-
-        }
-        return list
-    }
 }
 
 module.exports = {
