@@ -1,6 +1,6 @@
 {
   "name": "lsl.js",
-  "version": "1.0.8",
+  "version": "1.0.9",
   "description": "Node interface to the lab streaming layer",
   "repository": "https://github.com/JuananMtez/lsl.js",
   "main": "index.js",
